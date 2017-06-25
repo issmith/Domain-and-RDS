@@ -46,7 +46,7 @@
     "DomainControllersImageOffer": "WindowsServer",
     "DomainControllersOSDiskName": "DomainControllersOSDisk",
     "DomainControllersVmSize": "Standard_D2_v2",
-    "DomainControllersVnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', 'wgm01-vnet')]",
+    "DomainControllersVnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', 'wgm01-vnet')]",
     "DomainControllersSubnetRef": "[concat(variables('DomainControllersVnetID'), '/subnets/', 'emirsessionhosts')]",
     "DomainControllersStorageAccountContainerName": "vhds",
     "DomainControllersNicName": "[concat(parameters('DomainControllersName'), 'NetworkInterface')]"},
