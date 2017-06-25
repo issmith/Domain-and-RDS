@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "_artifactsLocation": {
+      "type": "string"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring"
+    }},
+  "variables": {
+    "NetworkingTemplateFolder": "nestedtemplates",
+    "NetworkingTemplateFileName": "Networking.json",
+    "NetworkingTemplateParametersFileName": "Networking.parameters.json",
+    "DomainControllersTemplateFolder": "nestedtemplates",
+    "DomainControllersTemplateFileName": "DomainControllers.json",
+    "DomainControllersTemplateParametersFileName": "DomainControllers.parameters.json"},
+  "resources": [
+    {
+      "name": "Networking",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('NetworkingTemplateFolder'), '/', variables('NetworkingTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parametersLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('NetworkingTemplateFolder'), '/', variables('NetworkingTemplateParametersFileName'), parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    },
+    {
+      "name": "DomainControllers",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [ "Networking" ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('DomainControllersTemplateFolder'), '/', variables('DomainControllersTemplateFileName'), parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parametersLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('DomainControllersTemplateFolder'), '/', variables('DomainControllersTemplateParametersFileName'), parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    }],
+  "outputs": {}
+}

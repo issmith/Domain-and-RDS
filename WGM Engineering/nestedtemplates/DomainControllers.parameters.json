@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "DomainControllersName": {
+      "value": "DC01"
+    },
+    "DomainControllersAdminUserName": {
+      "value": "ian"
+    },
+    "virtualNetworkLocation": {
+      "value": "uksouth"
+    },
+    "DomainControllersAdminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/e1a7cc51-e72f-44d9-977a-ba208377ae76/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/issmithkeyvault"
+        },
+        "secretName": "AdminPassword"
+      }
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "WGMNetworking"
+    }
+  }
+}

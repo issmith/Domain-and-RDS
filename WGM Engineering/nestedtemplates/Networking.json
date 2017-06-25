@@ -1,0 +1,144 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+
+
+
+  },
+  "variables": {
+    "wgm01-vnetName": "wgm01-vnet",
+    "wgm01-vnetPrefix": "10.1.0.0/20",
+    "wgm01-vnetSubnet1Name": "domaincontrollers",
+    "wgm01-vnetSubnet1Prefix": "10.1.0.0/24",
+    "wgm01-vnetSubnet2Name": "emirapplication",
+    "wgm01-vnetSubnet2Prefix": "10.1.1.0/24",
+    "wgm01-vnetSubnet3Name": "emirsessionhosts",
+    "wgm01-vnetSubnet3Prefix": "10.1.2.0/24",
+    "wgm01-vnetSubnet4Name": "rdsgatewayrdsweb",
+    "wgm01-vnetSubnet4Prefix": "10.1.3.0/24",
+    "rdsbrokerIntlbName": "rdsbroker-intlb",
+    "rdsbrokerAS": "rdsbroker-as",
+    "domaincontrollersAS": "domaincontrollers-as",
+    "emirsessionhostAS": "emirsessionhost-as",
+    "rdsgatewayrdswebAS": "rdsgatewayrdsweb-as",
+
+    "vnetId1": "[resourceId('Microsoft.Network/virtualNetworks', variables('wgm01-vnetName'))]",
+    "subnet2Ref": "[concat(variables('vnetId1'), '/subnets/', variables('wgm01-vnetSubnet2Name'))]",
+    "linkedtemplate1TemplateFolder": "nestedtemplates",
+    "linkedtemplate1TemplateFileName": "linkedtemplate1.json",
+    "linkedtemplate1TemplateParametersFileName": "linkedtemplate1.parameters.json"
+
+  },
+  "resources": [
+    {
+      "name": "[variables('wgm01-vnetName')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "VNET"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('wgm01-vnetPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('wgm01-vnetSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('wgm01-vnetSubnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('wgm01-vnetSubnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('wgm01-vnetSubnet2Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('wgm01-vnetSubnet3Name')]",
+            "properties": {
+              "addressPrefix": "[variables('wgm01-vnetSubnet3Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('wgm01-vnetSubnet4Name')]",
+            "properties": {
+              "addressPrefix": "[variables('wgm01-vnetSubnet4Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+
+
+
+
+    {
+      "name": "[variables('rdsbrokerAS')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "tags": {
+        "displayName": "rdsbrokerAS"
+      },
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 2
+      }
+    },
+
+    {
+      "name": "[variables('domaincontrollersAS')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "tags": {
+        "displayName": "domaincontrollersAS"
+      },
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 2
+      }
+    },
+
+    {
+      "name": "[variables('emirsessionhostAS')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "tags": {
+        "displayName": "emirsessionhostAS"
+      },
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 2
+      }
+    },
+
+    {
+      "name": "[variables('rdsgatewayrdswebAS')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "tags": {
+        "displayName": "dsgatewayrdswebAS"
+      },
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 2
+      }
+    }
+
+
+  ],
+  "outputs": {}
+}
