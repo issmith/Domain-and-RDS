@@ -82,14 +82,18 @@
       "name": "[variables('rdsbrokerAS')]",
       "type": "Microsoft.Compute/availabilitySets",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-03-30",
       "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "sku": {
+        "name": "Aligned"
+      },
       "tags": {
         "displayName": "rdsbrokerAS"
       },
       "properties": {
         "platformUpdateDomainCount": 5,
         "platformFaultDomainCount": 2
+
       }
     },
 
@@ -97,14 +101,18 @@
       "name": "[variables('domaincontrollersAS')]",
       "type": "Microsoft.Compute/availabilitySets",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-03-30",
       "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "sku": {
+        "name": "Aligned"
+      },
       "tags": {
         "displayName": "domaincontrollersAS"
       },
       "properties": {
         "platformUpdateDomainCount": 5,
-        "platformFaultDomainCount": 2
+        "platformFaultDomainCount": 2,
+
       }
     },
 
@@ -112,14 +120,18 @@
       "name": "[variables('emirsessionhostAS')]",
       "type": "Microsoft.Compute/availabilitySets",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-03-30",
       "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "sku": {
+        "name": "Aligned"
+      },
       "tags": {
         "displayName": "emirsessionhostAS"
       },
       "properties": {
         "platformUpdateDomainCount": 5,
         "platformFaultDomainCount": 2
+
       }
     },
 
@@ -127,18 +139,22 @@
       "name": "[variables('rdsgatewayrdswebAS')]",
       "type": "Microsoft.Compute/availabilitySets",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-03-30",
       "dependsOn": [ "[variables('wgm01-vnetName')]" ],
+      "sku": {
+        "name": "Aligned"
+      },
       "tags": {
         "displayName": "dsgatewayrdswebAS"
       },
       "properties": {
         "platformUpdateDomainCount": 5,
         "platformFaultDomainCount": 2
+
       }
     }
 
-
+      
   ],
   "outputs": {}
 }

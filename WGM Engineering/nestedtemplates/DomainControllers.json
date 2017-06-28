@@ -53,20 +53,6 @@
   },
   "resources": [
     {
-      "name": "[variables('DomainControllersName')]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2016-01-01",
-      "sku": {
-        "name": "[parameters('DomainControllersType')]"
-      },
-      "dependsOn": [],
-      "tags": {
-        "displayName": "DomainControllers"
-      },
-      "kind": "Storage"
-    },
-    {
       "name": "[concat(variables('DomainControllersNicName'),copyIndex(1))]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[parameters('virtualNetworkLocation')]",
@@ -99,19 +85,22 @@
       "name": "[concat(parameters('DomainControllersName'), copyIndex(1))]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-03-30",
       "copy": {
         "name": "DomainControllerCopy",
         "count": 2
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('DomainControllersName'))]",
+
         "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('DomainControllersNicName'),copyIndex(1)))]"
       ],
       "tags": {
         "displayName": "DomainControllers"
       },
       "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'domaincontrollers-as')]"
+        },
         "hardwareProfile": {
           "vmSize": "[variables('DomainControllersVmSize')]"
         },
@@ -128,13 +117,20 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "DomainControllersOSDisk",
-            "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('DomainControllersName')), '2016-01-01').primaryEndpoints.blob, variables('DomainControllersStorageAccountContainerName'), '/', variables('DomainControllersOSDiskName'),copyIndex(1), '.vhd')]"
-            },
+            "name": "[concat('DomainControllerOSDisk', copyIndex(1))]",
+
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          }
+          },
+          "dataDisks": [
+            {
+              "name": "[concat('DomainController',copyIndex(1),'DataDisk')]",
+              "diskSizeGB": "32",
+              "lun": 0,
+              "createOption": "Empty",
+              "caching": "None"
+            }
+          ]
         },
         "networkProfile": {
           "networkInterfaces": [
